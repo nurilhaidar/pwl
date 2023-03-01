@@ -10,4 +10,24 @@ class HomeController extends Controller
     {
         return view("home");
     }
+
+    public function index()
+    {
+        return view("beranda");
+    }
+
+    public function profile()
+    {
+        return view("profile");
+    }
+
+    public function sekolah()
+    {
+        return view("sekolah");
+    }
+
+    public function kuliah()
+    {
+        return view("kuliah");
+    }
 }
