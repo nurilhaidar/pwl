@@ -64,6 +64,14 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="artikel" class="nav-link">
+                        <i class="nav-icon fas fa-newspaper"></i>
+                        <p>
+                            Tabel Artikel
+                        </p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

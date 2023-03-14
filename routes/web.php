@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PageController;
@@ -36,40 +37,42 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/about', [PageController::class, 'about']);
 // Route::get('/articles/{id}', [PageController::class, 'articles']);
 
-// //Home
-// Route::get('/', [Praktikum1::class, 'home']);
+//Home
+Route::get('/', [Praktikum1::class, 'home']);
 
-// //Product
-// Route::prefix('product')->group(function () {
-//     Route::get('/', [Praktikum1::class, "productHome"]);
-//     Route::get('{id}', [Praktikum1::class, "product"]);
-// });
+//Product
+Route::prefix('product')->group(function () {
+    Route::get('/', [Praktikum1::class, "productHome"]);
+    Route::get('{id}', [Praktikum1::class, "product"]);
+});
 
-// //News
-// Route::get('/news', [Praktikum1::class, "newsHome"]);
-// Route::get('/news/{id}', [Praktikum1::class, "news"]);
+//News
+Route::get('/news', [Praktikum1::class, "newsHome"]);
+Route::get('/news/{id}', [Praktikum1::class, "news"]);
 
-// //Program
-// Route::prefix('program')->group(function () {
-//     Route::get('/', [Praktikum1::class, "program"]);
-//     Route::get('/karir', function () {
-//         return redirect("https://www.educastudio.com/program/karir");
-//     });
-//     Route::get('/magang', function () {
-//         return redirect("https: //www.educastudio.com/program/magang");
-//     });
-//     Route::get('/kunjungan', function () {
-//         return redirect("https://www.educastudio.com/program/kunjungan-industri");
-//     });
-// });
+//Program
+Route::prefix('program')->group(function () {
+    Route::get('/', [Praktikum1::class, "program"]);
+    Route::get('/karir', function () {
+        return redirect("https://www.educastudio.com/program/karir");
+    });
+    Route::get('/magang', function () {
+        return redirect("https: //www.educastudio.com/program/magang");
+    });
+    Route::get('/kunjungan', function () {
+        return redirect("https://www.educastudio.com/program/kunjungan-industri");
+    });
+});
 
-// //Contact
-// Route::get('/contact', [Praktikum1::class, 'contact_us']);
+//Contact
+Route::get('/contact', [Praktikum1::class, 'contact_us']);
 
-// //About Us
-// Route::get('/about', [Praktikum1::class, 'about_us']);
+//About Us
+Route::get('/about', [Praktikum1::class, 'about_us']);
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/sekolah', [HomeController::class, 'sekolah']);
 Route::get('/profile', [HomeController::class, 'profile']);
 Route::get('/kuliah', [HomeController::class, 'kuliah']);
+
+Route::get('/artikel', [ArtikelController::class, 'index']);
