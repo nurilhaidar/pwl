@@ -1,12 +1,16 @@
 <?php
 
 use App\Http\Controllers\ArtikelController;
+use App\Http\Controllers\HobiController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KeluargaController;
+use App\Http\Controllers\MatkulController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Praktikum1;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProgramController;
+use Database\Seeders\KeluargaSeeder;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -76,3 +80,6 @@ Route::get('/profile', [HomeController::class, 'profile']);
 Route::get('/kuliah', [HomeController::class, 'kuliah']);
 
 Route::get('/artikel', [ArtikelController::class, 'index']);
+Route::get('/hobi', [HobiController::class, 'index']);
+Route::get('/keluarga', [KeluargaController::class, 'index']);
+Route::get('/matkul', [MatkulController::class, 'index']);

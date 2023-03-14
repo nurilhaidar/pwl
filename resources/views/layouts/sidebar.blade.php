@@ -65,12 +65,39 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="artikel" class="nav-link">
-                        <i class="nav-icon fas fa-newspaper"></i>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-table"></i>
                         <p>
-                            Tabel Artikel
+                            Tabel
+                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/artikel" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Tabel Artikel</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/hobi" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Tabel Hobi</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/keluarga" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Tabel Keluarga</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/matkul" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Tabel Mata Kuliah</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </nav>
