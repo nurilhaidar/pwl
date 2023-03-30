@@ -1,10 +1,23 @@
-<html>
-<h1>HOME</h1>
-<ul><a href="">Home</a></ul>
-<ul><a href="/product">Products</a></ul>
-<ul><a href="/news">News</a></ul>
-<ul><a href="/program">Program</a></ul>
-<ul><a href="/about">About Us</a></ul>
-<ul><a href="/contact">Contact Us</a></ul>
+@extends('layouts.app')
 
-</html>
+@section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">{{ __('Dashboard') }}</div>
+
+                <div class="card-body">
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+
+                    {{ __('You are logged in!') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
