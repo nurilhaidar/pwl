@@ -65,6 +65,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{url('mahasiswa')}}" class="nav-link">
+                        <i class="nav-icon fas fa-graduation-cap"></i>
+                        <p>
+                            Mahasiswa
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-table"></i>
                         <p>

@@ -6,12 +6,14 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HobiController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KeluargaController;
+use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MatkulController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Praktikum1;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProgramController;
+use App\Models\Matkul;
 use Database\Seeders\KeluargaSeeder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -87,7 +89,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/kuliah', [HomeController::class, 'kuliah']);
 
     Route::get('/artikel', [ArtikelController::class, 'index']);
-    Route::get('/hobi', [HobiController::class, 'index']);
     Route::get('/keluarga', [KeluargaController::class, 'index']);
-    Route::get('/matkul', [MatkulController::class, 'index']);
+
+    Route::resource('/mahasiswa', MahasiswaController::class);
+    Route::resource('/hobi', HobiController::class);
+    Route::resource('/keluarga', KeluargaController::class);
+    Route::resource('/matkul', MatkulController::class);
 });

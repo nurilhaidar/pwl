@@ -12,4 +12,9 @@ class Hobi extends Model
     protected $table = 'hobi';
     protected $primaryKey = 'id_hobi';
     protected $keyType = 'string';
+
+    protected $fillable = [
+        'id_hobi',
+        'nama'
+    ];
 }
