@@ -48,6 +48,7 @@
                             <td>{{$m->hp}}</td>
                             <td>
                                 <a href="{{ url('/mahasiswa/'. $m->id.'/edit') }}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{{ url('/nilai/'. $m->id) }}" class="btn btn-sm btn-warning">Nilai</a>
                                 <form method="GET" action="{{ url('/mahasiswa/'.$m->id) }}">
                                     @csrf
                                     <button type="submit" class="btn btn-sm btn-danger">Show</button>

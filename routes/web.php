@@ -7,6 +7,7 @@ use App\Http\Controllers\HobiController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KeluargaController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\MahasiswaMatakuliah;
 use App\Http\Controllers\MatkulController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PageController;
@@ -95,4 +96,5 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/hobi', HobiController::class);
     Route::resource('/keluarga', KeluargaController::class);
     Route::resource('/matkul', MatkulController::class);
+    Route::resource('/nilai', MahasiswaMatakuliah::class);
 });

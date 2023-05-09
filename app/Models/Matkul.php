@@ -10,12 +10,16 @@ class Matkul extends Model
     use HasFactory;
 
     protected $table = 'matkul';
-    protected $primaryKey = 'id_matkul';
-    protected $keyType = 'string';
 
     protected $fillable = [
-        'id_matkul',
-        'nama',
-        'sks'
+        'nama_matkul',
+        'sks',
+        'jam',
+        'semester'
     ];
+
+    public function mahasiswa()
+    {
+        return $this->belongsToMany(Mahasiswa::class, 'mahasiswa_matakuliah', 'id_matkul', 'id_mahasiswa')->withPivot('nilai');
+    }
 }

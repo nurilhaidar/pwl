@@ -25,4 +25,9 @@ class Mahasiswa extends Model
     {
         return $this->belongsTo(Kelas::class, 'id_kelas');
     }
+
+    public function matkul()
+    {
+        return $this->belongsToMany(Matkul::class, 'mahasiswa_matakuliah', 'id_mahasiswa', 'id_matkul')->withPivot('nilai');
+    }
 }
