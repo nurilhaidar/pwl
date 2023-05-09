@@ -30,6 +30,7 @@
                             <th>No</th>
                             <th>NIM</th>
                             <th>Nama</th>
+                            <th>Kelas</th>
                             <th>JK</th>
                             <th>HP</th>
                             <th>Action</th>
@@ -37,19 +38,24 @@
                     </thead>
                     <tbody>
                         @if($mhs->count() > 0)
-                        @foreach($mhs as $i => $m)
+                        @foreach($paginate as $m)
                         <tr>
-                            <td>{{++$i}}</td>
+                            <td>{{$loop->iteration}}</td>
                             <td>{{$m->nim}}</td>
                             <td>{{$m->nama}}</td>
+                            <td>{{$m->kelas->nama_kelas}}</td>
                             <td>{{$m->jk}}</td>
                             <td>{{$m->hp}}</td>
                             <td>
-                                <a href="{{ url('/mahasiswa/'. $m->id.'/edit') }}" class="btn btn-sm btn-warning">edit</a>
+                                <a href="{{ url('/mahasiswa/'. $m->id.'/edit') }}" class="btn btn-sm btn-warning">Edit</a>
+                                <form method="GET" action="{{ url('/mahasiswa/'.$m->id) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-danger">Show</button>
+                                </form>
                                 <form method="POST" action="{{ url('/mahasiswa/'.$m->id) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">hapus</button>
+                                    <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
                                 </form>
                             </td>
                         </tr>
@@ -61,6 +67,8 @@
                         @endif
                     </tbody>
                 </table>
+                <br>
+                {{$paginate->links()}}
             </div>
             <!-- /.card-body -->
             <!-- /.card-body -->

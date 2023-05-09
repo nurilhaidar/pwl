@@ -17,24 +17,29 @@ class MatkulSeeder extends Seeder
     {
         DB::table('matkul')->insert([
             [
-                'id_makul' => 'M01',
-                'nama' => 'Pemrograman Web Lanjut',
-                'sks' => 4
+                'nama_matkul' => 'Pemrograman Berbasis Objek',
+                'sks' => 3,
+                'jam' => 6,
+                'semester' => 4
+            ],
+
+            [
+                'nama_matkul' => 'Pemrograman Web Lanjut',
+                'sks' => 3,
+                'jam' => 6,
+                'semester' => 4
             ],
             [
-                'id_makul' => 'M02',
-                'nama' => 'Basis Data Lanjut',
-                'sks' => 2
+                'nama_matkul' => 'Basis Data Lanjut',
+                'sks' => 3,
+                'jam' => 4,
+                'semester' => 4
             ],
             [
-                'id_makul' => 'M03',
-                'nama' => 'Analisis dan Desain Berorientasi Objek',
-                'sks' => 2
-            ],
-            [
-                'id_makul' => 'M04',
-                'nama' => 'Proyek 1',
-                'sks' => 4
+                'nama_matkul' => 'Praktikum Basis Data Lanjut',
+                'sks' => 3,
+                'jam' => 6,
+                'semester' => 4
             ]
         ]);
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mahasiswa;
+use App\Models\Kelas;
 use Illuminate\Http\Request;
 
 class MahasiswaController extends Controller
@@ -14,8 +15,9 @@ class MahasiswaController extends Controller
      */
     public function index()
     {
-        $mhs = Mahasiswa::all();
-        return view('mahasiswa.mahasiswa')->with('mhs', $mhs);
+        $mahasiswa = Mahasiswa::with('kelas')->get();
+        $paginate = Mahasiswa::orderBy('id', 'asc')->paginate(3);
+        return view('mahasiswa.mahasiswa', ['mhs' => $mahasiswa, 'paginate' => $paginate]);
     }
 
     /**
@@ -25,7 +27,8 @@ class MahasiswaController extends Controller
      */
     public function create()
     {
-        return view('mahasiswa.create_mahasiswa')->with('url_form', url('/mahasiswa'));
+        $kelas = Kelas::all();
+        return view('mahasiswa.create_mahasiswa', ['kelas' => $kelas])->with('url_form', url('/mahasiswa'));
     }
 
     /**
@@ -39,6 +42,7 @@ class MahasiswaController extends Controller
         $request->validate([
             'nim' => 'required|string|max:10|unique:mahasiswa,nim',
             'nama' => 'required|string|max:50',
+            'id_kelas' => 'required|string',
             'jk' => 'required|in:l,p',
             'tempat_lahir' => 'required|string|max:50',
             'tanggal_lahir' => 'required|date',
@@ -46,8 +50,23 @@ class MahasiswaController extends Controller
             'hp' => 'required|digits_between:6,15'
         ]);
 
-        $data = Mahasiswa::create($request->except(['_token']));
-        return redirect('mahasiswa')->with('success', 'Mahasiswa Berhasil Ditambahkan');
+        $mahasiswa = new Mahasiswa;
+        $mahasiswa->nim = $request->get('nim');
+        $mahasiswa->nama = $request->get('nama');
+        $mahasiswa->jk = $request->get('jk');
+        $mahasiswa->tempat_lahir = $request->get('tempat_lahir');
+        $mahasiswa->tanggal_lahir = $request->get('tanggal_lahir');
+        $mahasiswa->alamat = $request->get('alamat');
+        $mahasiswa->hp = $request->get('hp');
+        $mahasiswa->save();
+
+        $kelas = new Kelas;
+        $kelas->id = $request->get('id_kelas');
+
+        $mahasiswa->kelas()->associate($kelas);
+        $mahasiswa->save();
+
+        return redirect('mahasiswa')->with('success', 'Berhasil');
     }
 
     /**
@@ -56,9 +75,11 @@ class MahasiswaController extends Controller
      * @param  \App\Models\Mahasiswa  $mahasiswa
      * @return \Illuminate\Http\Response
      */
-    public function show(Mahasiswa $mahasiswa)
+    public function show($id)
     {
-        //
+        $mahasiswa = Mahasiswa::with('kelas')->where('id', $id)->first();
+
+        return view('mahasiswa.show_mahasiswa')->with('mhs', $mahasiswa);
     }
 
     /**
@@ -69,9 +90,11 @@ class MahasiswaController extends Controller
      */
     public function edit($id)
     {
-        $mahasiswa = Mahasiswa::find($id);
+        $mahasiswa = Mahasiswa::with('kelas')->where('id', $id)->first();
+        $kelas = Kelas::all();
         return view('mahasiswa.create_mahasiswa')
             ->with('mhs', $mahasiswa)
+            ->with('kelas', $kelas)
             ->with('url_form', url('/mahasiswa/' . $id));
     }
 
@@ -94,8 +117,23 @@ class MahasiswaController extends Controller
             'hp' => 'required|digits_between:6,15'
         ]);
 
-        $data = Mahasiswa::where('id', '=', $id)->update($request->except(['_token', '_method']));
-        return redirect('mahasiswa')->with('success', 'Mahasiswa Berhasil Di Edit');
+        $mahasiswa = Mahasiswa::with('kelas')->where('id', $id)->first();
+        $mahasiswa->nim = $request->get('nim');
+        $mahasiswa->nama = $request->get('nama');
+        $mahasiswa->jk = $request->get('jk');
+        $mahasiswa->tempat_lahir = $request->get('tempat_lahir');
+        $mahasiswa->tanggal_lahir = $request->get('tanggal_lahir');
+        $mahasiswa->alamat = $request->get('alamat');
+        $mahasiswa->hp = $request->get('hp');
+        $mahasiswa->save();
+
+        $kelas = new Kelas;
+        $kelas->id = $request->get('id_kelas');
+
+        $mahasiswa->kelas()->associate($kelas);
+        $mahasiswa->save();
+
+        return redirect('mahasiswa')->with('success', 'Berhasil');
     }
 
     /**
