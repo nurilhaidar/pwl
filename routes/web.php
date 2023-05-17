@@ -88,13 +88,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sekolah', [HomeController::class, 'sekolah']);
     Route::get('/profile', [HomeController::class, 'profile']);
     Route::get('/kuliah', [HomeController::class, 'kuliah']);
-
-    Route::get('/artikel', [ArtikelController::class, 'index']);
     Route::get('/keluarga', [KeluargaController::class, 'index']);
+    Route::get('/artikel/cetak_pdf', [ArtikelController::class, 'cetak']);
 
     Route::resource('/mahasiswa', MahasiswaController::class);
     Route::resource('/hobi', HobiController::class);
     Route::resource('/keluarga', KeluargaController::class);
     Route::resource('/matkul', MatkulController::class);
     Route::resource('/nilai', MahasiswaMatakuliah::class);
+    Route::resource('/artikel', ArtikelController::class);
 });
