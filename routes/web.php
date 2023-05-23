@@ -14,6 +14,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\Praktikum1;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProgramController;
+use App\Models\Mahasiswa;
 use App\Models\Matkul;
 use Database\Seeders\KeluargaSeeder;
 use Illuminate\Support\Facades\Auth;
@@ -89,7 +90,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [HomeController::class, 'profile']);
     Route::get('/kuliah', [HomeController::class, 'kuliah']);
     Route::get('/keluarga', [KeluargaController::class, 'index']);
-    Route::get('/artikel/cetak_pdf', [ArtikelController::class, 'cetak']);
+    Route::get('/artikel/cetak', [ArtikelController::class, 'cetak']);
+    Route::get('/mahasiswa/cetak/{id}', [MahasiswaController::class, 'cetak']);
 
     Route::resource('/mahasiswa', MahasiswaController::class);
     Route::resource('/hobi', HobiController::class);

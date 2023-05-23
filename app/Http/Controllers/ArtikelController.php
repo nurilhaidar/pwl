@@ -120,3 +120,4 @@ class ArtikelController extends Controller
         return $pdf->stream();
     }
 }
+    

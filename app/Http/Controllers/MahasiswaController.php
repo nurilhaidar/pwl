@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Mahasiswa;
 use App\Models\Kelas;
 use Illuminate\Http\Request;
+use PDF;
+use Storage;
+
+use function PHPUnit\Framework\fileExists;
 
 class MahasiswaController extends Controller
 {
@@ -16,7 +20,7 @@ class MahasiswaController extends Controller
     public function index()
     {
         $mahasiswa = Mahasiswa::with('kelas')->get();
-        $paginate = Mahasiswa::orderBy('id', 'asc')->paginate(3);
+        $paginate = Mahasiswa::orderBy('id', 'desc')->paginate(3);
         return view('mahasiswa.mahasiswa', ['mhs' => $mahasiswa, 'paginate' => $paginate]);
     }
 
@@ -39,6 +43,7 @@ class MahasiswaController extends Controller
      */
     public function store(Request $request)
     {
+        $mahasiswa = new Mahasiswa;
         $request->validate([
             'nim' => 'required|string|max:10|unique:mahasiswa,nim',
             'nama' => 'required|string|max:50',
@@ -47,10 +52,14 @@ class MahasiswaController extends Controller
             'tempat_lahir' => 'required|string|max:50',
             'tanggal_lahir' => 'required|date',
             'alamat' => 'required|string|max:255',
-            'hp' => 'required|digits_between:6,15'
+            'hp' => 'required|digits_between:6,15',
+            'img' => 'required|file',
         ]);
 
-        $mahasiswa = new Mahasiswa;
+        if($request->file('img')){
+            $image_name = $request->file('img')->store('mahasiswa', 'public');
+        }
+
         $mahasiswa->nim = $request->get('nim');
         $mahasiswa->nama = $request->get('nama');
         $mahasiswa->jk = $request->get('jk');
@@ -58,6 +67,7 @@ class MahasiswaController extends Controller
         $mahasiswa->tanggal_lahir = $request->get('tanggal_lahir');
         $mahasiswa->alamat = $request->get('alamat');
         $mahasiswa->hp = $request->get('hp');
+        $mahasiswa->img = $image_name;
         $mahasiswa->save();
 
         $kelas = new Kelas;
@@ -78,7 +88,6 @@ class MahasiswaController extends Controller
     public function show($id)
     {
         $mahasiswa = Mahasiswa::with('kelas')->where('id', $id)->first();
-
         return view('mahasiswa.show_mahasiswa')->with('mhs', $mahasiswa);
     }
 
@@ -107,6 +116,8 @@ class MahasiswaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $mahasiswa = Mahasiswa::with('kelas')->where('id', $id)->first();
+
         $request->validate([
             'nim' => 'required|string|max:10|unique:mahasiswa,nim,' . $id,
             'nama' => 'required|string|max:50',
@@ -114,10 +125,18 @@ class MahasiswaController extends Controller
             'tempat_lahir' => 'required|string|max:50',
             'tanggal_lahir' => 'required|date',
             'alamat' => 'required|string|max:255',
-            'hp' => 'required|digits_between:6,15'
+            'hp' => 'required|digits_between:6,15',
+            'img' => 'file',
         ]);
 
-        $mahasiswa = Mahasiswa::with('kelas')->where('id', $id)->first();
+        if($request->file('img')){
+            if($mahasiswa->img && fileExists(storage_path('app/public/'.$mahasiswa->img))){
+                Storage::delete('public/'.$mahasiswa->img);
+            }
+            $image_name = $request->file('img')->store('image', 'public');
+            $mahasiswa->img = $image_name;
+        }
+
         $mahasiswa->nim = $request->get('nim');
         $mahasiswa->nama = $request->get('nama');
         $mahasiswa->jk = $request->get('jk');
@@ -127,7 +146,7 @@ class MahasiswaController extends Controller
         $mahasiswa->hp = $request->get('hp');
         $mahasiswa->save();
 
-        $kelas = new Kelas;
+        $kelas = new Kelas;     
         $kelas->id = $request->get('id_kelas');
 
         $mahasiswa->kelas()->associate($kelas);
@@ -144,7 +163,14 @@ class MahasiswaController extends Controller
      */
     public function destroy($id)
     {
-        Mahasiswa::where('id', '=', $id)->delete();
+        $data = Mahasiswa::where('id', '=', $id)->delete();
+        Storage::delete('public/'.$data->img);
         return redirect('mahasiswa')->with('success', 'Mahasiswa Berhasil Di Hapus');
+    }
+
+    public function cetak($id){
+        $mahasiswa = Mahasiswa::with('kelas')->where('id', $id)->first();
+        $pdf = PDF::loadView('mahasiswa.nilai_mahasiswa', ['data'=>$mahasiswa])->setOptions(['defaultFont' => 'sans-serif']);
+        return $pdf->stream();
     }
 }

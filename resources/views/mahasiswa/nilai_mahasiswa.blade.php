@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href=" {{asset('assets/plugins/fontawesome-free/css/all.min.css')}}">
+    <link rel="stylesheet" href=" {{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
     <!-- Theme style -->
-    <link rel="stylesheet" href="{{asset('assets/dist/css/adminlte.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
+
 <body>
     <h3 class="text-center">JURUSAN TEKNOLOGI INFORMASI - POLITEKNIK NEGERI MALANG</h3>
     <br><br>
     <h2 class="text-center"><b>KARTU HASIL STUDI (KHS)</b></h2>
     <br>
     <div class="container">
-        <h5><b>Nama :</b> {{$data->nama}} </h5>
-        <h5><b>NIM :</b> {{$data->nim}} </h5>
-        <h5><b>Kelas :</b> {{$data->kelas->nama_kelas}} </h5>
+        <h5><b>Nama :</b> {{ $data->nama }} </h5>
+        <h5><b>NIM :</b> {{ $data->nim }} </h5>
+        <h5><b>Kelas :</b> {{ $data->kelas->nama_kelas }} </h5>
         <br><br>
-
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -36,15 +38,17 @@
             <tbody>
                 @foreach ($data->matkul as $d)
                     <tr>
-                        <th>{{$loop->iteration}}</th>
-                        <td>{{$d->nama_matkul}}</td>
-                        <td>{{$d->sks}}</td>
-                        <td>{{$d->semester}}</td>
-                        <td>{{$d->pivot->nilai}}</td>
+                        <th>{{ $loop->iteration }}</th>
+                        <td>{{ $d->nama_matkul }}</td>
+                        <td>{{ $d->sks }}</td>
+                        <td>{{ $d->semester }}</td>
+                        <td>{{ $d->pivot->nilai }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+        <a href="{{ url('/mahasiswa/cetak/' . $data->id) }}" class="btn btn-success">CETAK</a>
     </div>
 </body>
+
 </html>
