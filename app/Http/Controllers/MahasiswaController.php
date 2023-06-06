@@ -5,13 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Mahasiswa;
 use App\Models\Kelas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use PDF;
 use Storage;
+use Yajra\DataTables\DataTables;
 
 use function PHPUnit\Framework\fileExists;
 
 class MahasiswaController extends Controller
 {
+    public function data()
+    {
+        $data = Mahasiswa::all();
+        $kelas = Kelas::all();
+
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->make(true);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,9 +31,11 @@ class MahasiswaController extends Controller
      */
     public function index()
     {
-        $mahasiswa = Mahasiswa::with('kelas')->get();
-        $paginate = Mahasiswa::orderBy('id', 'desc')->paginate(3);
-        return view('mahasiswa.mahasiswa', ['mhs' => $mahasiswa, 'paginate' => $paginate]);
+        // $mahasiswa = Mahasiswa::with('kelas')->get();
+        // $paginate = Mahasiswa::orderBy('id', 'desc')->paginate(3);
+        // return view('mahasiswa.mahasiswa', ['mhs' => $mahasiswa, 'paginate' => $paginate]);
+        $kelas = Kelas::all();
+        return view('mahasiswa.mahasiswa')->with('kelas', $kelas);
     }
 
     /**
@@ -43,8 +57,42 @@ class MahasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        $mahasiswa = new Mahasiswa;
-        $request->validate([
+        // $mahasiswa = new Mahasiswa;
+        // $request->validate([
+        //     'nim' => 'required|string|max:10|unique:mahasiswa,nim',
+        //     'nama' => 'required|string|max:50',
+        //     'id_kelas' => 'required|string',
+        //     'jk' => 'required|in:l,p',
+        //     'tempat_lahir' => 'required|string|max:50',
+        //     'tanggal_lahir' => 'required|date',
+        //     'alamat' => 'required|string|max:255',
+        //     'hp' => 'required|digits_between:6,15',
+        //     'img' => 'required|file',
+        // ]);
+
+        // if ($request->file('img')) {
+        //     $image_name = $request->file('img')->store('mahasiswa', 'public');
+        // }
+
+        // $mahasiswa->nim = $request->get('nim');
+        // $mahasiswa->nama = $request->get('nama');
+        // $mahasiswa->jk = $request->get('jk');
+        // $mahasiswa->tempat_lahir = $request->get('tempat_lahir');
+        // $mahasiswa->tanggal_lahir = $request->get('tanggal_lahir');
+        // $mahasiswa->alamat = $request->get('alamat');
+        // $mahasiswa->hp = $request->get('hp');
+        // $mahasiswa->img = $image_name;
+        // $mahasiswa->save();
+
+        // $kelas = new Kelas;
+        // $kelas->id = $request->get('id_kelas');
+
+        // $mahasiswa->kelas()->associate($kelas);
+        // $mahasiswa->save();
+
+        // return redirect('mahasiswa')->with('success', 'Berhasil');
+
+        $rule = [
             'nim' => 'required|string|max:10|unique:mahasiswa,nim',
             'nama' => 'required|string|max:50',
             'id_kelas' => 'required|string',
@@ -54,29 +102,34 @@ class MahasiswaController extends Controller
             'alamat' => 'required|string|max:255',
             'hp' => 'required|digits_between:6,15',
             'img' => 'required|file',
-        ]);
+        ];
 
-        if($request->file('img')){
-            $image_name = $request->file('img')->store('mahasiswa', 'public');
+        $validator = Validator::make($request->all(), $rule);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'modal_close' => false,
+                'message' => 'Data gagal ditambahkan. ' . $validator->errors()->first(),
+                'data' => $validator->errors()
+            ]);
         }
 
-        $mahasiswa->nim = $request->get('nim');
-        $mahasiswa->nama = $request->get('nama');
-        $mahasiswa->jk = $request->get('jk');
-        $mahasiswa->tempat_lahir = $request->get('tempat_lahir');
-        $mahasiswa->tanggal_lahir = $request->get('tanggal_lahir');
-        $mahasiswa->alamat = $request->get('alamat');
-        $mahasiswa->hp = $request->get('hp');
-        $mahasiswa->img = $image_name;
-        $mahasiswa->save();
+        $image_name = $request->file('img')->store('mahasiswa', 'public');
+        $mhs = Mahasiswa::create($request->except('_token', '_method', 'img') + ['img' => $image_name]);
+        return response()->json([
+            'status' => ($mhs),
+            'modal_close' => false,
+            'message' => ($mhs) ? 'Data berhasil ditambahkan' : 'Data gagal ditambahkan',
+            'data' => null
+        ]);
 
-        $kelas = new Kelas;
-        $kelas->id = $request->get('id_kelas');
-
-        $mahasiswa->kelas()->associate($kelas);
-        $mahasiswa->save();
-
-        return redirect('mahasiswa')->with('success', 'Berhasil');
+        return response()->json([
+            'status' => ($mhs),
+            'modal_close' => false,
+            'message' => ($mhs) ? 'Data berhasil ditambahkan' : 'Data gagal ditambahkan',
+            'data' => null
+        ]);
     }
 
     /**
@@ -116,43 +169,78 @@ class MahasiswaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $mahasiswa = Mahasiswa::with('kelas')->where('id', $id)->first();
+        // $mahasiswa = Mahasiswa::with('kelas')->where('id', $id)->first();
 
-        $request->validate([
+        // $request->validate([
+        //     'nim' => 'required|string|max:10|unique:mahasiswa,nim,' . $id,
+        //     'nama' => 'required|string|max:50',
+        //     'jk' => 'required|in:l,p',
+        //     'tempat_lahir' => 'required|string|max:50',
+        //     'tanggal_lahir' => 'required|date',
+        //     'alamat' => 'required|string|max:255',
+        //     'hp' => 'required|digits_between:6,15',
+        //     'img' => 'file',
+        // ]);
+
+        // if ($request->file('img')) {
+        //     if ($mahasiswa->img && fileExists(storage_path('app/public/' . $mahasiswa->img))) {
+        //         Storage::delete('public/' . $mahasiswa->img);
+        //     }
+        //     $image_name = $request->file('img')->store('image', 'public');
+        //     $mahasiswa->img = $image_name;
+        // }
+
+        // $mahasiswa->nim = $request->get('nim');
+        // $mahasiswa->nama = $request->get('nama');
+        // $mahasiswa->jk = $request->get('jk');
+        // $mahasiswa->tempat_lahir = $request->get('tempat_lahir');
+        // $mahasiswa->tanggal_lahir = $request->get('tanggal_lahir');
+        // $mahasiswa->alamat = $request->get('alamat');
+        // $mahasiswa->hp = $request->get('hp');
+        // $mahasiswa->save();
+
+        // $kelas = new Kelas;
+        // $kelas->id = $request->get('id_kelas');
+
+        // $mahasiswa->kelas()->associate($kelas);
+        // $mahasiswa->save();
+
+        // return redirect('mahasiswa')->with('success', 'Berhasil');
+        $rule = [
             'nim' => 'required|string|max:10|unique:mahasiswa,nim,' . $id,
             'nama' => 'required|string|max:50',
+            'id_kelas' => 'required|string',
             'jk' => 'required|in:l,p',
             'tempat_lahir' => 'required|string|max:50',
             'tanggal_lahir' => 'required|date',
             'alamat' => 'required|string|max:255',
             'hp' => 'required|digits_between:6,15',
             'img' => 'file',
-        ]);
+        ];
 
-        if($request->file('img')){
-            if($mahasiswa->img && fileExists(storage_path('app/public/'.$mahasiswa->img))){
-                Storage::delete('public/'.$mahasiswa->img);
-            }
-            $image_name = $request->file('img')->store('image', 'public');
-            $mahasiswa->img = $image_name;
+        $validator = Validator::make($request->all(), $rule);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'modal_close' => false,
+                'message' => 'Data gagal diedit. ' . $validator->errors()->first(),
+                'data' => $validator->errors()
+            ]);
         }
 
-        $mahasiswa->nim = $request->get('nim');
-        $mahasiswa->nama = $request->get('nama');
-        $mahasiswa->jk = $request->get('jk');
-        $mahasiswa->tempat_lahir = $request->get('tempat_lahir');
-        $mahasiswa->tanggal_lahir = $request->get('tanggal_lahir');
-        $mahasiswa->alamat = $request->get('alamat');
-        $mahasiswa->hp = $request->get('hp');
-        $mahasiswa->save();
+        if ($request->file('img')) {
+            $image_name = $request->file('img')->store('mahasiswa', 'public');
+            $mhs = Mahasiswa::where('id', $id)->update($request->except('_token', '_method', 'img') + ['img' => $image_name]);
+        }
 
-        $kelas = new Kelas;     
-        $kelas->id = $request->get('id_kelas');
+        $mhs = Mahasiswa::where('id', $id)->update($request->except('_token', '_method'));
 
-        $mahasiswa->kelas()->associate($kelas);
-        $mahasiswa->save();
-
-        return redirect('mahasiswa')->with('success', 'Berhasil');
+        return response()->json([
+            'status' => ($mhs),
+            'modal_close' => $mhs,
+            'message' => ($mhs) ? 'Data berhasil diedit' : 'Data gagal diedit',
+            'data' => null
+        ]);
     }
 
     /**
@@ -163,14 +251,18 @@ class MahasiswaController extends Controller
      */
     public function destroy($id)
     {
-        $data = Mahasiswa::where('id', '=', $id)->delete();
-        Storage::delete('public/'.$data->img);
+        $data = Mahasiswa::where('id', '=', $id)->first();
+        if ($data->img == !null) {
+            Storage::delete('public/' . $data->img);
+        }
+        $data->delete();
         return redirect('mahasiswa')->with('success', 'Mahasiswa Berhasil Di Hapus');
     }
 
-    public function cetak($id){
+    public function cetak($id)
+    {
         $mahasiswa = Mahasiswa::with('kelas')->where('id', $id)->first();
-        $pdf = PDF::loadView('mahasiswa.nilai_mahasiswa', ['data'=>$mahasiswa])->setOptions(['defaultFont' => 'sans-serif']);
+        $pdf = PDF::loadView('mahasiswa.nilai_mahasiswa', ['data' => $mahasiswa])->setOptions(['defaultFont' => 'sans-serif']);
         return $pdf->stream();
     }
 }

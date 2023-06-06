@@ -92,6 +92,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/keluarga', [KeluargaController::class, 'index']);
     Route::get('/artikel/cetak', [ArtikelController::class, 'cetak']);
     Route::get('/mahasiswa/cetak/{id}', [MahasiswaController::class, 'cetak']);
+    Route::post('/mahasiswa/data', [MahasiswaController::class, 'data']);
 
     Route::resource('/mahasiswa', MahasiswaController::class);
     Route::resource('/hobi', HobiController::class);

@@ -18,7 +18,8 @@ class Mahasiswa extends Model
         'tempat_lahir',
         'tanggal_lahir',
         'alamat',
-        'hp'
+        'hp',
+        'img'
     ];
 
     public function kelas()
